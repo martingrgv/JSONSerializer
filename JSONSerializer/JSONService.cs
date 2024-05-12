@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Text;
+﻿using System.Text;
 
 namespace JSONSerializer
 {
@@ -35,11 +34,15 @@ namespace JSONSerializer
                 sb.Append("\t");
                 sb.Append($"\"{property.Name.ToLower()}\": ");
 
-                string value = property.GetValue(obj).ToString();
+                var value = property.GetValue(obj);
 
-                if (IsNumber(value))
+                if (value == null)
                 {
-                    sb.Append($"{value}");
+                    sb.Append("null");
+                }
+                else if (IsNumber(value.ToString()))
+                {
+                    sb.Append(value);
                 }
                 else
                 {
@@ -49,7 +52,7 @@ namespace JSONSerializer
                 sb.AppendLine(",");
             }
 
-            sb.Remove(sb.Length - 3, 1);
+            sb.Remove(sb.Length - 3, 2);
             sb.AppendLine("}");
 
             return sb.ToString().TrimEnd();
@@ -65,9 +68,14 @@ namespace JSONSerializer
                 sb.AppendLine(",");
             }
 
-            sb.Remove(sb.Length - 3, 1);
+            sb.Remove(sb.Length - 3, 3);
 
             return sb.ToString().TrimEnd();
         }
+
+        //public static T Deserialize<T>(string jsonString)
+        //{
+        //    return ;
+        //}
     }
 }
