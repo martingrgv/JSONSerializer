@@ -1,9 +1,10 @@
 ﻿using System.Text;
 
-namespace JSONSerializer
+namespace JSONSerializer.Services
 {
     public static class JSONService
     {
+        // TODO: Make deep copy, not shallow as it is
         private static bool IsNumber(string str)
         {
             char[] charArr = str.ToCharArray();
@@ -31,8 +32,8 @@ namespace JSONSerializer
 
             foreach (var property in properties)
             {
-                sb.Append("\t");
-                sb.Append($"\"{property.Name.ToLower()}\": ");
+                sb.Append("  ");
+                sb.Append($"\"{property.Name}\": ");
 
                 var value = property.GetValue(obj);
 
@@ -62,6 +63,7 @@ namespace JSONSerializer
         {
             StringBuilder sb = new StringBuilder();
 
+            sb.Append("[");
             foreach (object obj in objects)
             {
                 sb.Append(Serialize(obj));
@@ -69,6 +71,8 @@ namespace JSONSerializer
             }
 
             sb.Remove(sb.Length - 3, 3);
+
+            sb.AppendLine("]");
 
             return sb.ToString().TrimEnd();
         }

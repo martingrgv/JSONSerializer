@@ -1,4 +1,4 @@
-﻿namespace JSONSerializer
+﻿namespace JSONSerializer.Services
 {
     public static class StreamService
     {

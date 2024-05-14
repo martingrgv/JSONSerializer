@@ -1,11 +1,12 @@
-﻿namespace JSONSerializer
+﻿using JSONSerializer.Models;
+using JSONSerializer.Services;
+
+namespace JSONSerializer
 {
-    public class Program
+    public class StartUp
     {
         static void Main(string[] args)
         {
-            Product product = new Product(1, "Nike Air Force 1", 250);
-
             List<Product> products = new List<Product>()
             {
                 new Product(1, "Louis Vuitton Dress", 500.50m),

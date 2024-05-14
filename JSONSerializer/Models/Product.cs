@@ -1,4 +1,4 @@
-﻿namespace JSONSerializer
+﻿namespace JSONSerializer.Models
 {
     public class Product
     {
@@ -7,11 +7,14 @@
             Id = id;
             Name = name;
             Price = price;
+            Rating = new Rating();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
+
+        public Rating Rating { get; set; }
 
         public override string ToString()
         {
