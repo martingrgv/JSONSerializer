@@ -1,5 +1,5 @@
-﻿using JSONSerializer.Models;
-using System.CodeDom.Compiler;
+﻿using MyJSONSerializer.Models;
+using System.ComponentModel;
 using System.Text.Json;
 
 namespace JSONLibraryReference
@@ -20,8 +20,11 @@ namespace JSONLibraryReference
             };
 
             var options = new JsonSerializerOptions(){ WriteIndented = true };
-            string productsJSON = JsonSerializer.Serialize(products, options);
+            string productsJSON = JsonSerializer.Serialize(products[0], options);
             Console.WriteLine(productsJSON);
+
+            Product deserializedProduct = JsonSerializer.Deserialize<Product>(productsJSON);
+            Console.WriteLine(deserializedProduct);
         }
     }
 }

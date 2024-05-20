@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JSONSerializer\JSONSerializer.csproj" />
+    <ProjectReference Include="..\JSONSerializer\MyJSONSerializer.csproj" />
   </ItemGroup>
 
 </Project>
