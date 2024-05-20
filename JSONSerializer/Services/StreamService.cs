@@ -1,23 +1,24 @@
-﻿namespace JSONSerializer.Services
-{
-    public static class StreamService
-    {
-        private const string FILENAME = "data.json";
+﻿using MyJSONSerializer.Interfaces;
 
-        public static string Read()
+namespace MyJSONSerializer.Services
+{
+    public class StreamService : IStreamer
+    {
+        private IStreamer _streamer;
+
+        public StreamService(IStreamer streamer)
         {
-            using (StreamReader reader = new StreamReader(FILENAME))
-            {
-                return reader.ReadToEnd();
-            }
+            _streamer = streamer;
         }
 
-        public static void Write(string data)
+        public string Read()
         {
-            using (StreamWriter writer = new StreamWriter(FILENAME))
-            {
-                writer.Write(data);
-            }
+            return _streamer.Read();
+        }
+
+        public void Write(string data)
+        {
+            _streamer.Write(data);
         }
     }
 }

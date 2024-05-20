@@ -1,7 +1,8 @@
-﻿using JSONSerializer.Models;
-using JSONSerializer.Services;
+﻿using MyJSONSerializer.IO;
+using MyJSONSerializer.Models;
+using MyJSONSerializer.Services;
 
-namespace JSONSerializer
+namespace MyJSONSerializer
 {
     public class StartUp
     {
@@ -16,12 +17,18 @@ namespace JSONSerializer
                 new Product(5, null, 0)
             };
 
-            string productJSON = JSONService.Serialize(products);
+            string productJSON = JSONSerializer.Instance().Serialize(products[0]);
 
-            StreamService.Write(productJSON);
+            FileStreamer fs = new FileStreamer("data.json");
+            StreamService streamService = new StreamService(fs);
+            //streamService.Write(productJSON);
 
-            string output = StreamService.Read();
+            string output = streamService.Read();
             Console.WriteLine(output);
+
+
+            Product deserializedProduct = JSONSerializer.Instance().Deserialize<Product>(streamService.Read());
+            Console.WriteLine(deserializedProduct);
         }
     }
 }

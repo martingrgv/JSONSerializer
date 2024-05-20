@@ -1,4 +1,4 @@
-﻿namespace JSONSerializer.Models
+﻿namespace MyJSONSerializer.Models
 {
     public class Rating
     {
