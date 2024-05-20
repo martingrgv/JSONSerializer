@@ -19,9 +19,9 @@ namespace MyJSONSerializer
 
             string productJSON = JSONSerializer.Instance().Serialize(products[0]);
 
-            FileStreamer fs = new FileStreamer("data.json");
+            FileStreamer fs = new FileStreamer("products.json");
             StreamService streamService = new StreamService(fs);
-            //streamService.Write(productJSON);
+            streamService.Write(productJSON);
 
             string output = streamService.Read();
             Console.WriteLine(output);
