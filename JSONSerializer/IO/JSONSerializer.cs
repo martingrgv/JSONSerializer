@@ -1,10 +1,12 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 using System.Text;
 
 namespace MyJSONSerializer.IO
 {
     public class JSONSerializer
     {
+        private static object _locker = new object();
         private static JSONSerializer _instance;
 
         protected JSONSerializer()
@@ -16,61 +18,70 @@ namespace MyJSONSerializer.IO
         {
             if (_instance == null)
             {
-                _instance = new JSONSerializer();
+                lock (_locker)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new JSONSerializer();
+                    }
+                }
             }
 
             return _instance;
         }
 
         // TODO: Make deep copy
-        private bool IsNumber(string str)
+        public string Serialize(object obj)
         {
-            char[] charArr = str.ToCharArray();
-
-            foreach (char ch in charArr)
+            if (obj == null)
             {
-                if (char.IsDigit(ch))
-                {
-                    return true;
-                }
+                throw new InvalidOperationException("Cannot serialize null object");
             }
 
-            return false;
+            return GetJSONString(obj);
         }
 
-        public string Serialize(object obj)
+        private string GetJSONString(object obj)
         {
             StringBuilder sb = new StringBuilder();
 
             Type type = obj.GetType();
-            var properties = type.GetProperties();
-
+            PropertyInfo[] properties = type.GetProperties();
 
             sb.Append("{");
 
+            int i = 0;
             foreach (var property in properties)
             {
                 sb.Append($"\"{property.Name}\": ");
 
-                var value = property.GetValue(obj);
+                object value = property.GetValue(obj);
 
                 if (value == null)
                 {
                     sb.Append("null");
                 }
-                else if (IsNumber(value.ToString()))
+                else if (value is int)
                 {
                     sb.Append(value);
+                }
+                else if (value is float || value is double || value is decimal)
+                {
+                    decimal decimalValue = (decimal)value;
+                    sb.Append(decimalValue.ToString(CultureInfo.CreateSpecificCulture("en-GB")));
                 }
                 else
                 {
                     sb.Append($"\"{value}\"");
                 }
 
-                sb.Append(", ");
+                if (i < properties.Length - 1)
+                {
+                    sb.Append(", ");
+                    i++;
+                }
             }
 
-            sb.Remove(sb.Length - 5, 5);
             sb.AppendLine("}");
 
             return sb.ToString().TrimEnd();
@@ -95,6 +106,7 @@ namespace MyJSONSerializer.IO
         }
         
         // TODO: Deserialize with constructor params
+        // TODO: Group Methods/Order Methods
         private Dictionary<string, object> GetParametersFromJSON(string jsonString)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
