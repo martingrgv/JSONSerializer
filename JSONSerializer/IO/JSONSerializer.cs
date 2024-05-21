@@ -67,6 +67,7 @@ namespace MyJSONSerializer.IO
                     sb.Append($"\"{value}\"");
                 }
 
+                // Implement counter and if counter is < len append
                 sb.Append(", ");
             }
 
