@@ -35,7 +35,7 @@ namespace MyJSONSerializer.IO
         {
             if (obj == null)
             {
-                throw new InvalidOperationException("Cannot serialize null object");
+                throw new InvalidOperationException("Cannot serialize null object!");
             }
 
             return GetJSONString(obj);
@@ -53,7 +53,7 @@ namespace MyJSONSerializer.IO
             int i = 0;
             foreach (var property in properties)
             {
-                sb.Append($"\"{property.Name}\": ");
+                sb.Append($"\"{property.Name}\":");
 
                 object value = property.GetValue(obj);
 
@@ -77,7 +77,7 @@ namespace MyJSONSerializer.IO
 
                 if (i < properties.Length - 1)
                 {
-                    sb.Append(", ");
+                    sb.Append(",");
                     i++;
                 }
             }
@@ -89,22 +89,37 @@ namespace MyJSONSerializer.IO
 
         public string Serialize(IEnumerable<object> objects)
         {
+            if (!objects.Any())
+            {
+                throw new InvalidOperationException("Cannot serialize null objects!");
+            }
+
+            return GetJSONEnumerableString(objects);
+        }
+
+        private string GetJSONEnumerableString(IEnumerable<object> objects)
+        {
             StringBuilder sb = new StringBuilder();
 
             sb.Append("[");
+
+            int i = 0;
             foreach (object obj in objects)
             {
                 sb.Append(Serialize(obj));
-                sb.AppendLine(",");
-            }
 
-            sb.Remove(sb.Length - 3, 3);
+                if (i < objects.Count() - 1)
+                {
+                    sb.Append(",");
+                    i++;
+                }
+            }
 
             sb.AppendLine("]");
 
             return sb.ToString().TrimEnd();
         }
-        
+
         // TODO: Deserialize with constructor params
         // TODO: Group Methods/Order Methods
         private Dictionary<string, object> GetParametersFromJSON(string jsonString)
